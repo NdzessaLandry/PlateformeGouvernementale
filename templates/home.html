@@ -1,19 +1,138 @@
 {% extends 'base.html' %}
 
-{% block title%} Home {% endblock %}
+{% block title %}Accueil | Plateforme Gouvernementale{% endblock %}
 
 {% block content %}
+<div class="row justify-content-center animate-fade-in my-4">
+    <div class="col-lg-10">
+        
+        {% if user.is_authenticated %}
+            
+            {% if a_besoin_de_classe %}
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="text-center mb-5">
+                            <span class="badge bg-primary px-3 py-2 text-uppercase fw-bold rounded-pill mb-2">Configuration Initiale</span>
+                            <h1 class="h2 fw-bold text-dark">Identifions vos leviers de croissance</h1>
+                            <p class="text-muted col-md-8 mx-auto">
+                                Cochez ci-dessous les besoins actuels de votre entreprise. Notre modèle d'analyse factorielle segmentera immédiatement votre structure pour vous proposer le réseau d'aide adéquat.
+                            </p>
+                        </div>
 
-{% if user.is_authenticated %}
-    Hi {{user.username}}!
-    <form action="/users/logout/" method="post" class="d-inline">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-decoration-none">
-        Se déconnecter
-    </button>
-</form>
-{% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Sing Up</a>
-{% endif %}
+                        <form method="post" class="needs-validation">
+                            {% csrf_token %}
+                            
+                            <div class="row g-4 mb-5">
+                                {% for field in form_besoins %}
+                                    <div class="col-md-6">
+                                        <div class="p-3 border rounded-3 bg-light h-100 d-flex align-items-center">
+                                            <div class="form-check form-switch form-check-inline m-0 w-100 d-flex align-items-center justify-content-between">
+                                                <label class="form-check-label fw-semibold text-secondary fs-6 cursor-pointer" for="{{ field.id_for_label }}">
+                                                    {{ field.label }}
+                                                </label>
+                                                <input type="checkbox" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="form-check-input fs-4 cursor-pointer" {% if field.value %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 py-3 fw-bold shadow-sm rounded-3">
+                                    <i class="bi bi-cpu-fill me-2"></i>Calculer mon profil et finaliser
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+                    <div class="card-body p-4 p-md-5 bg-light border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-4 d-none d-sm-block">
+                                <i class="bi bi-lightning-charge-fill fs-2"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-success mb-2 px-3 py-1.5 text-uppercase fw-bold">Diagnostic Effectué</span>
+                                <h1 class="h3 card-title mb-0">Espace Synergies de <span class="text-primary">{{ user.raison_sociale|default:user.username }}</span></h1>
+                                <p class="text-muted mb-0 mt-1">Sur la base de vos besoins, vous êtes associé à la classe : <strong class="text-dark">{{ user.classe.libele }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-4 bg-white">
+                        <div class="mb-4">
+                            <h3 class="h5 fw-bold mb-1 text-dark"><i class="bi bi-hub text-primary me-2"></i>Partenaires susceptibles de vous aider</h3>
+                            <p class="text-muted small mb-0">Ces structures ont été cartographiées comme des offreurs de solutions ou des partenaires clés pour la classe <strong>{{ user.classe.libele }}</strong>.</p>
+                        </div>
+
+                        <div class="row g-3">
+                            {% for entreprise in entreprises_recommandees %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded-4 bg-light shadow-hover h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h4 class="h6 fw-bold text-primary mb-0">{{ entreprise.raison_sociale|default:entreprise.username }}</h4>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border small">{{ entreprise.taille.libele }}</span>
+                                            </div>
+                                            <p class="small text-muted mb-2 text-truncate-2">{{ entreprise.description|default:"Cette structure n'a pas encore rédigé de présentation descriptive." }}</p>
+                                            
+                                            <div class="d-flex flex-wrap gap-2 my-2">
+                                                <span class="badge bg-light text-dark border small"><i class="bi bi-geo-alt me-1"></i>{{ entreprise.region.libele }}</span>
+                                                <span class="badge bg-light text-dark border small"><i class="bi bi-tag me-1"></i>{{ entreprise.secteur_activite.libele }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="pt-3 border-top mt-2 d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ entreprise.contact|default:"Non communiqué" }}</span>
+                                            <a href="#" class="btn btn-outline-primary btn-sm px-3 rounded-3 fw-semibold">Contacter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-12 text-center py-5">
+                                    <div class="text-muted mb-2"><i class="bi bi-diagram-2 fs-2"></i></div>
+                                    <p class="text-muted mb-0">Aucun offreur de solutions n'est encore rattaché pour répondre aux besoins de la classe {{ user.classe.libele }}.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="text-center py-5 px-4 my-5 bg-white rounded-4 shadow-sm border">
+                <div class="mb-4">
+                    <i class="bi bi-shield-lock-fill text-primary" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-5 fw-bold text-dark mb-3">Portail d'Échanges Inter-Entreprises</h1>
+                <p class="col-md-8 mx-auto fs-5 text-muted mb-5">
+                    Connectez-vous pour soumettre vos besoins sectoriels et être mis en relation automatique avec l'écosystème de partenaires étatiques et privés.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-5 shadow-sm fw-semibold">Se connecter</a>
+                    <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg px-5 fw-semibold">Créer un compte</a>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .shadow-hover { transition: all 0.2s ease; }
+    .shadow-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.05)!important;
+        background-color: #ffffff !important;
+    }
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>
 {% endblock %}

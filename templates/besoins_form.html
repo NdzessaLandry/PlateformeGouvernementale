@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block title %}Préciser mes besoins | Plateforme{% endblock %}
+
+{% block content %}
+<div class="besoins-wrapper animate-in">
+
+  <div class="besoins-header">
+    <a href="{% url 'home' %}" class="back-link">
+      <i class="bi bi-arrow-left me-1"></i>Retour
+    </a>
+    <div class="stepper">
+      <div class="step step--active">
+        <span class="step__num">1</span>
+        <span class="step__label">Mes besoins</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step step--inactive">
+        <span class="step__num">2</span>
+        <span class="step__label">Recommandations</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="besoins-card">
+
+    <div class="besoins-card__intro">
+      <div class="intro-icon"><i class="bi bi-sliders2-vertical"></i></div>
+      <div>
+        <h1 class="besoins-card__title">Précisez les besoins de votre entreprise</h1>
+        <p class="besoins-card__subtitle">
+          Ces informations permettent à notre algorithme de vous classer et de vous proposer
+          des partenaires adaptés à votre profil.
+        </p>
+      </div>
+    </div>
+
+    <form method="post" action="{% url 'besoins_form' %}" id="besoinsForm">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert-error">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+
+      <!-- Grille des 7 besoins -->
+      <div class="besoins-grid">
+
+        {% for field in form %}
+        <div class="besoin-item {% if field.errors %}besoin-item--error{% endif %}">
+          <label class="besoin-label" for="{{ field.id_for_label }}">
+            <div class="besoin-label__left">
+              <span class="besoin-icon">
+                {% if field.name == 'besoin_intrants' %}<i class="bi bi-box-seam"></i>
+                {% elif field.name == 'besoin_financement' %}<i class="bi bi-bank"></i>
+                {% elif field.name == 'besoin_emballages' %}<i class="bi bi-archive"></i>
+                {% elif field.name == 'besoin_transport' %}<i class="bi bi-truck"></i>
+                {% elif field.name == 'besoin_appui' %}<i class="bi bi-person-arms-up"></i>
+                {% elif field.name == 'besoin_equipements' %}<i class="bi bi-tools"></i>
+                {% elif field.name == 'besoin_innovation' %}<i class="bi bi-lightbulb"></i>
+                {% else %}<i class="bi bi-check-circle"></i>
+                {% endif %}
+              </span>
+              <span class="besoin-label__text">{{ field.label }}</span>
+            </div>
+            <div class="toggle-switch">
+              {{ field }}
+              <span class="toggle-slider"></span>
+            </div>
+          </label>
+          {% if field.help_text %}
+          <p class="besoin-help">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+          <p class="besoin-error">{{ field.errors.as_text }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+      </div><!-- /.besoins-grid -->
+
+      <div class="besoins-actions">
+        <a href="{% url 'home' %}" class="btn-cancel">
+          Ignorer pour l'instant
+        </a>
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          Voir mes recommandations
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+:root {
+  --blue:    #1a56db;
+  --blue-lt: #eff6ff;
+  --dark:    #111827;
+  --muted:   #6b7280;
+  --border:  #e5e7eb;
+  --radius:  14px;
+  --success: #057a55;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.animate-in { animation: fadeUp .45s ease both; }
+
+.besoins-wrapper { max-width:720px; margin:1.5rem auto; }
+
+/* Header + stepper */
+.besoins-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1.5rem; flex-wrap:wrap; gap:.75rem;
+}
+.back-link {
+  display:inline-flex; align-items:center;
+  font-size:.88rem; font-weight:600; color:var(--muted);
+  text-decoration:none; transition:color .2s;
+}
+.back-link:hover { color:var(--blue); }
+
+.stepper { display:flex; align-items:center; gap:.5rem; }
+.step {
+  display:flex; align-items:center; gap:.4rem;
+  font-size:.82rem; font-weight:600;
+}
+.step__num {
+  width:24px; height:24px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; font-weight:800;
+}
+.step--active .step__num  { background:var(--blue); color:#fff; }
+.step--active .step__label{ color:var(--blue); }
+.step--inactive .step__num { background:var(--border); color:var(--muted); }
+.step--inactive .step__label { color:var(--muted); }
+.step-line { width:40px; height:2px; background:var(--border); }
+
+/* Card principale */
+.besoins-card {
+  background:#fff; border:1.5px solid var(--border);
+  border-radius:var(--radius); padding:2rem;
+}
+
+.besoins-card__intro {
+  display:flex; align-items:flex-start; gap:1rem; margin-bottom:2rem;
+  padding-bottom:1.5rem; border-bottom:1px solid var(--border);
+}
+.intro-icon {
+  width:48px; height:48px; border-radius:12px;
+  background:var(--blue-lt); color:var(--blue);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem; flex-shrink:0;
+}
+.besoins-card__title    { font-size:1.2rem; font-weight:800; color:var(--dark); margin:0 0 .3rem; }
+.besoins-card__subtitle { font-size:.88rem; color:var(--muted); margin:0; }
+
+/* Grille des besoins */
+.besoins-grid { display:flex; flex-direction:column; gap:.75rem; margin-bottom:2rem; }
+
+.besoin-item {
+  background:#fafafa; border:1.5px solid var(--border); border-radius:10px;
+  padding:1rem 1.1rem; transition:border-color .2s, background .2s;
+}
+.besoin-item:hover        { border-color:#c7d2fe; background:#fff; }
+.besoin-item--error       { border-color:#f87171; background:#fff5f5; }
+
+.besoin-label {
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; margin:0;
+}
+.besoin-label__left {
+  display:flex; align-items:center; gap:.75rem;
+}
+.besoin-icon {
+  width:36px; height:36px; border-radius:8px;
+  background:var(--blue-lt); color:var(--blue);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; flex-shrink:0;
+}
+.besoin-label__text { font-size:.92rem; font-weight:600; color:var(--dark); }
+.besoin-help  { font-size:.8rem; color:var(--muted); margin:.4rem 0 0 3.2rem; }
+.besoin-error { font-size:.8rem; color:#dc2626; margin:.3rem 0 0 3.2rem; }
+
+/* Toggle switch custom */
+.toggle-switch { position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; }
+.toggle-switch input       { opacity:0; width:0; height:0; position:absolute; }
+.toggle-slider {
+  position:absolute; inset:0; border-radius:99px;
+  background:#d1d5db; cursor:pointer;
+  transition:background .25s;
+}
+.toggle-slider::before {
+  content:''; position:absolute;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; left:3px; top:3px;
+  transition:transform .25s;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+input:checked + .toggle-slider              { background:var(--blue); }
+input:checked + .toggle-slider::before      { transform:translateX(20px); }
+
+/* Actions */
+.besoins-actions {
+  display:flex; align-items:center; justify-content:flex-end; gap:1rem;
+  padding-top:1.5rem; border-top:1px solid var(--border);
+}
+.btn-cancel {
+  font-size:.88rem; font-weight:600; color:var(--muted);
+  text-decoration:none; transition:color .2s;
+}
+.btn-cancel:hover { color:var(--dark); }
+.btn-submit {
+  display:inline-flex; align-items:center;
+  background:var(--blue); color:#fff;
+  border:none; padding:.7rem 1.6rem; border-radius:9px;
+  font-size:.92rem; font-weight:700; cursor:pointer;
+  transition:opacity .2s, transform .2s;
+}
+.btn-submit:hover { opacity:.88; transform:translateY(-1px); }
+
+.alert-error {
+  background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
+  border-radius:8px; padding:.75rem 1rem; margin-bottom:1rem;
+  font-size:.88rem;
+}
+
+@media(max-width:480px){
+  .besoins-card { padding:1.25rem; }
+  .besoins-actions { flex-direction:column-reverse; align-items:stretch; }
+  .btn-submit { justify-content:center; }
+}
+</style>
+{% endblock %}

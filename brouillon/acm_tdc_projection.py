@@ -282,7 +282,7 @@ reponses_exemple = {
         "besoin_equipements":         "Non",
         "besoin_innovation_recherche":"Non",
     }
-
+DOSSIER_COURANT = Path(__file__).resolve().parent
 def coordonnees_entreprises(dictio):
 
     # ── 6a. Réponses d'un individu exemple ──────────────────────────────────
@@ -298,8 +298,9 @@ def coordonnees_entreprises(dictio):
     # ── 6c. TDC pour plusieurs individus ────────────────────────────────────
     # 1. Chargement des fichiers fournis
     df_ind = tdc_ligne
-    df_coords = pd.read_csv("mca_categories_coords.csv")
-    df_eig = pd.read_csv("mca_eigenvalues.csv")
+    chemin_csv = DOSSIER_COURANT / "mca_categories_coords.csv"
+    df_coords = pd.read_csv(chemin_csv)
+    df_eig = pd.read_csv(DOSSIER_COURANT / "mca_eigenvalues.csv")
 
     # Nombre de variables qualitatives actives constatées dans ton profil (nombre de "1")
     Q = int(df_ind.sum(axis=1).values[0])
@@ -337,9 +338,12 @@ def coordonnees_entreprises(dictio):
     # 5. Affichage des résultats
     #print("--- Coordonnées de l'individu sur les axes factoriels ---")
     resultats = dict(zip(dimensions, coordonnees_projetees))
-    return resultats
+    l= list(resultats.values())
+    for i in range(len(l)):
+        l[i]=float(l[i])
+    return l
 
-
+print(coordonnees_entreprises(reponses_exemple))
 
 
    

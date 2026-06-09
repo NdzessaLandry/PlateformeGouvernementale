@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil | Plateforme Gouvernementale{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-10">
+        
+        {% if user.is_authenticated %}
+            
+            {% if show_onboarding %}
+                <div class="text-center my-4">
+                    <span class="badge bg-primary px-3 py-2 text-uppercase fw-bold rounded-pill mb-2">Première connexion</span>
+                    <h1 class="display-6 fw-bold text-dark mb-2">Bienvenue sur la plateforme, {{ user.username }} !</h1>
+                    <p class="text-muted col-md-8 mx-auto fs-5 mb-5">
+                        Votre compte a été créé avec succès. Pour commencer, choisissez l'une des deux options ci-dessous.
+                    </p>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 onboarding-card border-top border-primary border-4">
+                            <div class="card-body p-4 p-lg-5 d-flex flex-column text-center">
+                                <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle d-inline-block mx-auto mb-4">
+                                    <i class="bi bi-sliders2 fs-1"></i>
+                                </div>
+                                <h3 class="h4 fw-bold mb-3">Option 1 : Préciser vos besoins</h3>
+                                <p class="text-muted small flex-grow-1 mb-4">
+                                    Prenez 1 minute pour renseigner les besoins spécifiques de votre entreprise (intrants, emballages, financements, transport). Cela permettra d'ajuster au mieux les algorithmes de ciblage et d'analyse factorielle (ACM).
+                                </p>
+                                <a href="{% url 'signup' %}" class="btn btn-primary py-2.5 fw-semibold w-100 rounded-3 shadow-sm">
+                                    <i class="bi bi-pencil-square me-2"></i>Compléter mon profil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 onboarding-card border-top border-success border-4">
+                            <div class="card-body p-4 p-lg-5 d-flex flex-column text-center">
+                                <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle d-inline-block mx-auto mb-4">
+                                    <i class="bi bi-compass fs-1"></i>
+                                </div>
+                                <h3 class="h4 fw-bold mb-3">Option 2 : Navigation directe</h3>
+                                <p class="text-muted small flex-grow-1 mb-4">
+                                    Accédez immédiatement à l'annuaire et à la cartographie des entreprises de la plateforme en utilisant uniquement les informations basiques (Région, Secteur, Taille) fournies lors de votre inscription.
+                                </p>
+                                <a href="{% url 'home' %}" class="btn btn-outline-success py-2.5 fw-semibold w-100 rounded-3">
+                                    Explorer les entreprises <i class="bi bi-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+                    <div class="card-body p-5 bg-light border-bottom">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle me-4">
+                                <i class="bi bi-person-vcard fs-1"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-success mb-2 px-3 py-2 text-uppercase fw-bold">Espace Actif</span>
+                                <h1 class="h2 card-title mb-0">Ravi de vous revoir, <span class="text-primary">{{ user.username }}</span> !</h1>
+                            </div>
+                        </div>
+                        <p class="text-muted fs-5 mb-0">Bienvenue sur votre tableau de bord. Accédez à vos services, vos analyses et la gestion de vos données factorielles.</p>
+                    </div>
+                    
+                    <div class="card-body p-4 bg-white">
+                        <h3 class="h5 mb-4 text-secondary text-uppercase fw-bold small">Raccourcis disponibles</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 d-flex align-items-start shadow-hover">
+                                    <i class="bi bi-graph-up-arrow text-primary fs-3 me-3"></i>
+                                    <div>
+                                        <h4 class="h6 mb-1">Analyses factorielles</h4>
+                                        <p class="small text-muted mb-0">Visualisez et projetez vos données sur les axes d'analyse de l'ACM.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 d-flex align-items-start shadow-hover">
+                                    <i class="bi bi-shield-check text-success fs-3 me-3"></i>
+                                    <div>
+                                        <h4 class="h6 mb-1">Sécurité du compte</h4>
+                                        <p class="small text-muted mb-0">Mettez à jour vos informations ou modifiez votre mot de passe.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="text-center py-5 px-4 my-5 bg-white rounded-4 shadow-sm border">
+                <div class="mb-4">
+                    <i class="bi bi-shield-lock-fill text-primary" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-5 fw-bold text-dark mb-3">Accès Sécurisé à la Plateforme</h1>
+                <p class="col-md-8 mx-auto fs-5 text-muted mb-5">
+                    Pour consulter vos dossiers, réaliser vos simulations statistiques ou interagir avec les services en ligne, veuillez vous identifier.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-5 shadow-sm fw-semibold">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                    </a>
+                    <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg px-5 fw-semibold">
+                        <i class="bi bi-person-plus me-2"></i>S'inscrire
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+    /* Effet d'animation et interaction au survol */
+    .onboarding-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .onboarding-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba(0,0,0,.1) !important;
+    }
+    .shadow-hover {
+        transition: all 0.2s ease;
+    }
+    .shadow-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+    }
+</style>
+{% endblock %}

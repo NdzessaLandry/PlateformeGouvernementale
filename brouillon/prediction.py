@@ -1,5 +1,8 @@
 from pickle import load
 import pandas as pd
+from pathlib import Path
+
+DOSSIER_COURANT = Path(__file__).resolve().parent
 
 def predire_groupe_nouvel_individu(coordonnees_axes):
     """Prend en entrée la liste des coordonnées de l'individu sur les axes de l'ACM
@@ -9,7 +12,7 @@ def predire_groupe_nouvel_individu(coordonnees_axes):
     """
     # Scikit-learn requiert une matrice 2D (un tableau de lignes)
     # On transforme le vecteur en [[coord1, coord2, ...]]
-    model_predictif = load(open("model_predictif.pkl", "rb"))
+    model_predictif = load(open(DOSSIER_COURANT / "model_predictif.pkl", "rb"))
     X_new = [coordonnees_axes]
 
     # A. Prédire la classe finale

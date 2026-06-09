@@ -1,12 +1,283 @@
 {% extends 'base.html' %}
 
-{% block title %} Sign Up {% endblock %}
+{% block title %} Inscription | Plateforme Gouvernementale {% endblock %}
 
 {% block content %}
-<h2>Sign Up</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
+<div class="row justify-content-center my-4">
+    <div class="col-md-9 col-lg-7">
+        
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+            <div class="card-body p-4 p-md-5">
+                
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold h3 mb-1">Création de votre espace professionnel</h2>
+                    <p class="text-muted small">Veuillez compléter les étapes pour finaliser votre inscription</p>
+                </div>
+
+                <div class="steps-container mb-5">
+                    <div class="step-item active" id="badge-step-1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Identifiants</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item" id="badge-step-2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Structure & Activité</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item" id="badge-step-3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Description & Sécurité</span>
+                    </div>
+                </div>
+
+                <form method="post" class="custom-django-form" id="signup-wizard-form">
+                    {% csrf_token %}
+                    
+                    <div id="raw-django-fields" class="d-none">
+                        {{ form.as_p }}
+                    </div>
+
+                    <div class="wizard-step" id="step-1">
+                        <h4 class="h5 fw-bold mb-4 text-primary"><i class="bi bi-shield-lock me-2"></i>Informations de connexion</h4>
+                        <div class="step-fields-container row row-cols-1 row-cols-md-2 g-3">
+                            </div>
+                    </div>
+
+                    <div class="wizard-step d-none" id="step-2">
+                        <h4 class="h5 fw-bold mb-4 text-primary"><i class="bi bi-building me-2"></i>Profil de l'activité</h4>
+                        <div class="step-fields-container row row-cols-1 row-cols-md-2 g-3">
+                            </div>
+                    </div>
+
+                    <div class="wizard-step d-none" id="step-3">
+                        <h4 class="h5 fw-bold mb-4 text-primary"><i class="bi bi-ui-checks me-2"></i>Finalisation du profil</h4>
+                        <div class="step-fields-container row g-3">
+                            </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4 fw-semibold d-none" id="btn-prev">
+                            <i class="bi bi-arrow-left me-2"></i>Précédent
+                        </button>
+                        <button type="button" class="btn btn-primary px-4 fw-semibold ms-auto" id="btn-next">
+                            Suivant <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                        <button type="submit" class="btn btn-success px-4 fw-semibold d-none" id="btn-submit">
+                            <i class="bi bi-check-circle me-2"></i>Créer mon compte
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted small mb-0">Déjà inscrit ? 
+                        <a href="{% url 'login' %}" class="text-primary fw-semibold text-decoration-none ms-1">
+                            Se connecter
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .steps-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        position: relative;
+    }
+    .step-number {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-bottom: 8px;
+        border: 2px solid #dee2e6;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+    .step-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #6c757d;
+    }
+    .step-line {
+        flex: 1;
+        height: 2px;
+        background-color: #e9ecef;
+        margin-bottom: 24px;
+        z-index: 1;
+    }
+    .step-item.active .step-number {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+    .step-item.active .step-label {
+        color: #0d6efd;
+        font-weight: 600;
+    }
+    .step-item.completed .step-number {
+        background-color: #198754;
+        color: #fff;
+        border-color: #198754;
+    }
+    .step-item.completed .step-label {
+        color: #198754;
+    }
+
+    .custom-django-form label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-weight: 500;
+        color: #343a40;
+        font-size: 0.88rem;
+    }
+    
+    /* AJOUT DE "textarea" POUR EMBELLIR LE CHAMP DESCRIPTION */
+    .custom-django-form input[type="text"],
+    .custom-django-form input[type="password"],
+    .custom-django-form input[type="email"],
+    .custom-django-form input[type="number"],
+    .custom-django-form select,
+    .custom-django-form textarea {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.92rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        background-color: #fff;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+    
+    /* Hauteur spécifique fixe et redimensionnable proprement pour la description */
+    .custom-django-form textarea {
+        height: 100px;
+        resize: vertical;
+    }
+
+    .custom-django-form input:focus, 
+    .custom-django-form select:focus,
+    .custom-django-form textarea:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+    .custom-django-form .helptext {
+        display: block;
+        font-size: 0.78rem;
+        color: #6c757d;
+        margin-top: 0.3rem;
+        line-height: 1.3;
+    }
+    .custom-django-form .errorlist {
+        list-style: none;
+        padding-left: 0;
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+        font-weight: 500;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const rawContainer = document.getElementById("raw-django-fields");
+    const pTags = Array.from(rawContainer.querySelectorAll("p"));
+    
+    if (pTags.length === 0) return;
+
+    const containerStep1 = document.querySelector("#step-1 .step-fields-container");
+    const containerStep2 = document.querySelector("#step-2 .step-fields-container");
+    const containerStep3 = document.querySelector("#step-3 .step-fields-container");
+
+    // Même logique de répartition des champs
+    const step1Count = Math.min(4, pTags.length);
+    const remainingCount = pTags.length - step1Count;
+    const step2Count = Math.ceil(remainingCount / 2);
+
+    pTags.forEach((p, index) => {
+        const colDiv = document.createElement("div");
+        
+        if (index < step1Count) {
+            colDiv.className = "col";
+            colDiv.appendChild(p);
+            containerStep1.appendChild(colDiv);
+        } else if (index < step1Count + step2Count) {
+            colDiv.className = "col";
+            colDiv.appendChild(p);
+            containerStep2.appendChild(colDiv);
+        } else {
+            // --- TRAITEMENT SPÉCIAL POUR L'ÉTAPE 3 ---
+            // On vérifie si ce paragraphe contient la zone de texte de description
+            if (p.querySelector("textarea") || p.innerText.toLowerCase().includes("description")) {
+                colDiv.className = "col-12 mb-2"; // Prend toute la ligne !
+            } else {
+                colDiv.className = "col-md-6"; // Les mots de passe se mettent côte à côte (50% chacun)
+            }
+            colDiv.appendChild(p);
+            containerStep3.appendChild(colDiv);
+        }
+    });
+
+    // Gestion de la Navigation
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const btnSubmit = document.getElementById("btn-submit");
+
+    for (let i = 1; i <= totalSteps; i++) {
+        if (document.getElementById(`step-${i}`).querySelector(".errorlist")) {
+            currentStep = i;
+            break;
+        }
+    }
+    updateWizardUI();
+
+    btnNext.addEventListener("click", function() { if (currentStep < totalSteps) { currentStep++; updateWizardUI(); } });
+    btnPrev.addEventListener("click", function() { if (currentStep > 1) { currentStep--; updateWizardUI(); } });
+
+    function updateWizardUI() {
+        for (let i = 1; i <= totalSteps; i++) {
+            const stepEl = document.getElementById(`step-${i}`);
+            const badgeEl = document.getElementById(`badge-step-${i}`);
+            if (i === currentStep) {
+                stepEl.classList.remove("d-none");
+                badgeEl.className = "step-item active";
+            } else {
+                stepEl.classList.add("d-none");
+                badgeEl.className = i < currentStep ? "step-item completed" : "step-item";
+            }
+        }
+
+        if (currentStep === 1) {
+            btnPrev.classList.add("d-none"); btnNext.classList.remove("d-none"); btnSubmit.classList.add("d-none");
+        } else if (currentStep === totalSteps) {
+            btnPrev.classList.remove("d-none"); btnNext.classList.add("d-none"); btnSubmit.classList.remove("d-none");
+        } else {
+            btnPrev.classList.remove("d-none"); btnNext.classList.remove("d-none"); btnSubmit.classList.add("d-none");
+        }
+    }
+});
+</script>
 {% endblock %}

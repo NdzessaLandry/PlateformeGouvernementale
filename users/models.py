@@ -62,3 +62,13 @@ class CustomUser(AbstractUser):
     anciennete = models.ForeignKey(Anciennete, on_delete=models.CASCADE, null=True, blank=True)
     classe = models.ForeignKey(Classe, on_delete=models.CASCADE, null=True, blank=True)
 
+class reponseAuxBesoins(models.Model):
+    #Entreprise susceptible de répondre aux besoins de la classe préciser
+    entreprise = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('entreprise', 'classe')
+        constraints=[
+            models.UniqueConstraint(fields=['entreprise', 'classe'], name='unique_entreprise_classe')
+        ]
