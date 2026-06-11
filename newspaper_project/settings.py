@@ -123,3 +123,10 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 LOGIN_URL = 'users/login'
+# 1. Vérifie que cette ligne est bien là :
+STATIC_URL = 'static/'
+
+# 2. AJOUTE ABSOLUMENT CES LIGNES SI ELLES N'Y SONT PAS :
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
