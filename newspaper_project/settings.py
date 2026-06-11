@@ -101,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+WSGI_APPLICATION = 'newspaper_project.wsgi.application'
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
