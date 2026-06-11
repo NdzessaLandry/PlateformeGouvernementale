@@ -6,8 +6,23 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = UserCreationForm._meta.fields + ('raison_sociale', 'region', 'taille', 'anciennete', 'contact', 'secteur_activite', 'statut', 'description')
+        fields = UserCreationForm._meta.fields + (
+            'raison_sociale', 'region', 'taille', 'anciennete', 
+            'contact', 'secteur_activite', 'statut', 'description'
+        )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Liste des champs de l'entreprise à rendre obligatoires
+        champs_obligatoires = [
+            'raison_sociale', 'region', 'taille', 'anciennete', 
+            'contact', 'secteur_activite', 'statut', 'description'
+        ]
+        
+        for champ in champs_obligatoires:
+            if champ in self.fields:
+                self.fields[champ].required = True
+                
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
