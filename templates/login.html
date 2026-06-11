@@ -1,42 +1,71 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %} Connexion | Plateforme Gouvernementale {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center my-5">
-    <div class="col-md-6 col-lg-4">
+<div class="container my-5">
+    <div class="row align-items-center g-5">
         
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
-            <div class="card-body p-4 p-md-5">
-                
-                <div class="text-center mb-4">
-                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle d-inline-block mb-3">
-                        <i class="bi bi-shield-lock-fill fs-2"></i>
+        <div class="col-lg-7 col-md-12">
+            <div class="p-4 p-xl-5 bg-light rounded-4 shadow-sm border-0 position-relative">
+                <div class="row align-items-center">
+                    <div class="col-sm-4 text-center mb-3 mb-sm-0">
+                        <img src="{% static 'images/ministre.jpg' %}" 
+                             alt="Portrait du Ministre" 
+                             class="img-fluid rounded-4 shadow-sm border border-3 border-white"
+                             style="max-height: 220px; object-fit: cover;">
                     </div>
-                    <h2 class="fw-bold h4 mb-1">Espace Connexion</h2>
-                    <p class="text-muted small">Accédez à vos outils et données sécurisées</p>
-                </div>
-
-                <form method="post" class="custom-django-form">
-                    {% csrf_token %}
                     
-                    <div class="mb-4">
-                        {{ form.as_p }}
+                    <div class="col-sm-8">
+                        <span class="badge bg-primary mb-2 px-3 py-2 rounded-pill text-uppercase tracking-wider small">Mot du Ministre</span>
+                        <h3 class="fw-bold text-dark mb-3">Cap sur la Modernisation</h3>
+                        <figure class="mb-0">
+                            <blockquote class="blockquote fs-6 text-muted font-italic">
+                                "Bienvenue sur la plateforme officielle de partenariat et de suivi économique. Cet espace numérique structuré vise à fluidifier les échanges entre les institutions et les entreprises nationales et internationales pour dynamiser notre tissu industriel."
+                            </blockquote>
+                            <figcaption class="blockquote-footer mt-2 mb-0 fw-semibold text-primary">
+                                Le Ministre de l'Économie
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center mb-4">
+                        <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle d-inline-block mb-3">
+                            <i class="bi bi-shield-lock-fill fs-2"></i>
+                        </div>
+                        <h2 class="fw-bold h4 mb-1">Espace Connexion</h2>
+                        <p class="text-muted small">Accédez à vos outils et données sécurisées</p>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold shadow-sm rounded-3">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
-                    </button>
-                </form>
-                
-                <div class="text-center mt-4 pt-3 border-top">
-                    <p class="text-muted small mb-0">Vous n'avez pas de compte ? 
-                        <a href="{% url 'signup' %}" class="text-primary fw-semibold text-decoration-none ms-1">
-                            Créer un compte <i class="bi bi-arrow-right small"></i>
-                        </a>
-                    </p>
-                </div>
+                    <form method="post" class="custom-django-form">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            {{ form.as_p }}
+                        </div>
 
+                        <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold shadow-sm rounded-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <p class="text-muted small mb-0">Vous n'avez pas de compte ? 
+                            <a href="{% url 'signup' %}" class="text-primary fw-semibold text-decoration-none ms-1">
+                                Créer un compte <i class="bi bi-arrow-right small"></i>
+                            </a>
+                        </p>
+                    </div>
+
+                </div>
             </div>
         </div>
 
@@ -44,12 +73,11 @@
 </div>
 
 <style>
-    /* Espacement vertical des lignes générées par Django */
+    /* Vos styles existants pour le formulaire Django */
     .custom-django-form p {
         margin-bottom: 1.25rem;
     }
     
-    /* Style des étiquettes (Identifiant / Mot de passe) */
     .custom-django-form label {
         display: block;
         margin-bottom: 0.4rem;
@@ -58,7 +86,6 @@
         font-size: 0.88rem;
     }
     
-    /* Embellissement des champs de saisie (inputs) */
     .custom-django-form input[type="text"],
     .custom-django-form input[type="password"],
     .custom-django-form input[type="email"] {
@@ -75,7 +102,6 @@
         transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
     
-    /* Effet d'illumination bleue au clic sur un champ */
     .custom-django-form input:focus {
         color: #212529;
         background-color: #fff;
@@ -84,7 +110,6 @@
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
     }
     
-    /* Gestion élégante des listes d'erreurs d'authentification (ex: mauvais mot de passe) */
     .custom-django-form .errorlist {
         list-style: none;
         padding-left: 0;
