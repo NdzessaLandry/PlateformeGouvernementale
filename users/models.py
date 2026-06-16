@@ -46,6 +46,7 @@ class Anciennete(models.Model):
 class Classe(models.Model):
     id_classe = models.AutoField(primary_key=True)
     libele = models.CharField(max_length=255)
+    titre = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.libele

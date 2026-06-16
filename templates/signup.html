@@ -34,6 +34,29 @@
                 <form method="post" class="custom-django-form" id="signup-wizard-form">
                     {% csrf_token %}
                     
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                                <div>
+                                    <strong class="d-block mb-1">Veuillez corriger les erreurs de validation suivantes :</strong>
+                                    <ul class="mb-0 ps-3 small">
+                                        {% for field in form %}
+                                            {% for error in field.errors %}
+                                                <li><strong>{{ field.label }} :</strong> {{ error }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    
                     <div id="raw-django-fields" class="d-none">
                         {{ form.as_p }}
                     </div>
@@ -151,7 +174,6 @@
         font-size: 0.88rem;
     }
     
-    /* AJOUT DE "textarea" POUR EMBELLIR LE CHAMP DESCRIPTION */
     .custom-django-form input[type="text"],
     .custom-django-form input[type="password"],
     .custom-django-form input[type="email"],
@@ -168,7 +190,6 @@
         transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
     
-    /* Hauteur spécifique fixe et redimensionnable proprement pour la description */
     .custom-django-form textarea {
         height: 100px;
         resize: vertical;
@@ -196,6 +217,9 @@
         margin-bottom: 0.3rem;
         font-weight: 500;
     }
+    .custom-django-form .errorlist li::before {
+        content: "⚠️ ";
+    }
 </style>
 
 <script>
@@ -209,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const containerStep2 = document.querySelector("#step-2 .step-fields-container");
     const containerStep3 = document.querySelector("#step-3 .step-fields-container");
 
-    // Même logique de répartition des champs
     const step1Count = Math.min(4, pTags.length);
     const remainingCount = pTags.length - step1Count;
     const step2Count = Math.ceil(remainingCount / 2);
@@ -226,19 +249,16 @@ document.addEventListener("DOMContentLoaded", function() {
             colDiv.appendChild(p);
             containerStep2.appendChild(colDiv);
         } else {
-            // --- TRAITEMENT SPÉCIAL POUR L'ÉTAPE 3 ---
-            // On vérifie si ce paragraphe contient la zone de texte de description
             if (p.querySelector("textarea") || p.innerText.toLowerCase().includes("description")) {
-                colDiv.className = "col-12 mb-2"; // Prend toute la ligne !
+                colDiv.className = "col-12 mb-2"; 
             } else {
-                colDiv.className = "col-md-6"; // Les mots de passe se mettent côte à côte (50% chacun)
+                colDiv.className = "col-md-6"; 
             }
             colDiv.appendChild(p);
             containerStep3.appendChild(colDiv);
         }
     });
 
-    // Gestion de la Navigation
     let currentStep = 1;
     const totalSteps = 3;
 
@@ -246,6 +266,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnNext = document.getElementById("btn-next");
     const btnSubmit = document.getElementById("btn-submit");
 
+    // Redirection automatique de l'utilisateur vers l'étape contenant l'erreur
     for (let i = 1; i <= totalSteps; i++) {
         if (document.getElementById(`step-${i}`).querySelector(".errorlist")) {
             currentStep = i;
