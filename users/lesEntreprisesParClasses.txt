@@ -1,0 +1,14 @@
+Classe 1:
+1)
+nom: ADSK SARL
+Description: jeune entreprise camerounaise de transformation des produits 
+agricoles et centrale d'achat de produits Made
+in Cameroon, pouvant offrir des débouchés commerciaux aux petites structures
+contact: Bilongue Douala - Cameroun  (+237) 676 28 80 29, (+237) 690 11 97 37
+
+2) 
+nom: AGID-Cameroun SARL
+des: produit des fruits et légumes transformés en jus et pâtes,
+et distribue des semences potagères,
+des fertilisants et des équipements agroalimentaires au Cameroun
+contact: 
