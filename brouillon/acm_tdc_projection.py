@@ -36,7 +36,7 @@ VARIABLES = {
         "3 a 4 ans", "Moins de 3 ans", "Non renseigne"
     ],
     "secteur_activite_princ": [
-        "Technologies de l'information et de la communication (TIC)",
+        "Technologies de l information et de la communication (TIC)",
         "Agriculture et Agroalimentaire",
         "Industrie manufacturiere",
         "Services professionnels (consulting, comptabilite, etc.)",
