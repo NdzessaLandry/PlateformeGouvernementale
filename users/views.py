@@ -7,7 +7,7 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import ChoixBesoinsForm
-from .models import reponseAuxBesoins, CustomUser, Classe
+from .models import Besoins, besoins_entreprises, reponseAuxBesoins, CustomUser, Classe
 from brouillon.acm_tdc_projection import coordonnees_entreprises
 from brouillon.prediction import predire_groupe_nouvel_individu
 
@@ -55,12 +55,29 @@ def home_view(request):
                 besoins_dict["secteur_activite_princ"] = user.secteur_activite.libele if user.secteur_activite else "Non renseigné"
                 besoins_dict["taille_entreprise"] = user.taille.libele if user.taille else "Non renseigné"
                 besoins_dict["date_debut_activite"] = user.anciennete.libele if user.anciennete else "Non renseigné"
+                mapping_besoins={
+                    'besoin_financement': 'Besoin de financement',
+                    'besoin_emballages': 'Besoin d emballages',
+                    'besoin_transport': 'Besoin de transport / logistique',
+                    'besoin_appui_entreprise': 'Besoin d appui à l entreprise',
+                    'besoin_equipements': 'Besoin d equipements',
+                    'besoin_intrants': 'Besoin d intrants',
+                    'besoin_innovation_recherche': 'Besoin d innovation et recherche'
+                }
 
-            
+                for champ_form, libele_bdd in mapping_besoins.items():
+                    if form.cleaned_data.get(champ_form):
+                        try:
+                            besoin_obj=Besoins.objects.get(libele=libele_bdd)
+                            besoins_entreprises.objects.get_or_create(entreprise=user, besoins=besoin_obj)
+                        except Besoins.DoesNotExist:
+                            pass
+
                 # --- APPEL DE TON ALGORITHME ---
                 # Exemple : nouvelle_classe = ton_algorithme_de_classification(besoins_dict)
                 # (Assure-toi que ton algorithme retourne une instance du modèle 'Classe')
                 classe = predire_groupe_nouvel_individu(coordonnees_entreprises(besoins_dict))["classe_predite"]
+
                 classe_attribuee = Classe.objects.get(libele=classe)
                 user.classe = classe_attribuee
                 

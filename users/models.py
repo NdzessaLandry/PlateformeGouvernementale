@@ -25,6 +25,29 @@ class SecteurActivite(models.Model):
 
     def __str__(self):
         return self.libele
+class Besoins(models.Model):
+    id_besoins = models.AutoField(primary_key=True)
+    libele = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.libele
+class besoins_entreprises(models.Model):
+    entreprise = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    besoins = models.ForeignKey(Besoins, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('entreprise', 'besoins')
+        constraints=[
+            models.UniqueConstraint(fields=['entreprise', 'besoins'], name='unique_entreprise_besoins')
+        ]
+class offres_entreprises(models.Model):
+    entreprise = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    offres = models.ForeignKey(Besoins, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('entreprise', 'offres')
+        constraints=[
+            models.UniqueConstraint(fields=['entreprise', 'offres'], name='unique_entreprise_offres')
+        ]
 
 
 class Taille(models.Model):
